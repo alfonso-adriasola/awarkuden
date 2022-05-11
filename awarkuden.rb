@@ -16,6 +16,7 @@ end
 
 class Player < Struct.new(:name)
   def go
+    puts "#{name} throws" 
     8.times.map do  
         Bean.new.toss
      end
@@ -29,6 +30,7 @@ class Game
       set = set.map{|h| h.value }
     end
     x = set.tally
+    pp x
     c = x[:black] if x[:black]
     c = x[:white] if x[:white] and c.to_i < 4
     case c
@@ -44,8 +46,8 @@ end
 
 def play
   set = Player.new('player 1').go
-  set_2 = Player.new('player 2').go
   puts a = Game.new.score(set)
+  set_2 = Player.new('player 2').go
   puts b = Game.new.score(set_2)
   puts "player 1 wins" if a > b
   puts "player 2 wins" if b > a
