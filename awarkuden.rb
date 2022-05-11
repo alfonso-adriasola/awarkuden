@@ -24,13 +24,12 @@ class Player < Struct.new(:name)
 end
 
 class Game
-  def score(set)
+  def self.score(set)
     if set.first.is_a? Bean 
-      pp set.map(&:to_s)
+      pp set.map(&:to_s).join
       set = set.map{|h| h.value }
     end
     x = set.tally
-    pp x
     c = x[:black] if x[:black]
     c = x[:white] if x[:white] and c.to_i < 4
     case c
@@ -46,9 +45,9 @@ end
 
 def play
   set = Player.new('player 1').go
-  puts a = Game.new.score(set)
+  puts a = Game.score(set)
   set_2 = Player.new('player 2').go
-  puts b = Game.new.score(set_2)
+  puts b = Game.score(set_2)
   puts "player 1 wins" if a > b
   puts "player 2 wins" if b > a
   puts "tied" if a == b
@@ -56,15 +55,15 @@ end
 
 def test_score_rules
   set = [:white,:white,:white,:white,:white,:white,:white,:white]
-  raise unless Game.new.score(set) == 2
+  raise unless Game.score(set) == 2
   set = [:black,:black,:black,:black,:white,:white,:white,:white]
-  raise unless Game.new.score(set) == 1
+  raise unless Game.score(set) == 1
   set = [:black,:black,:black,:white,:white,:white,:white,:white]
-  raise unless Game.new.score(set) == 0
+  raise unless Game.score(set) == 0
   set = [:black,:white,:white,:white,:white,:white,:white,:white]
-  raise unless Game.new.score(set) == 2
+  raise unless Game.score(set) == 2
   set = [:black,:black,:black,:black,:black,:black,:black,:black]
-  raise unless Game.new.score(set) == 2
+  raise unless Game.score(set) == 2
   puts "----------  passed tests --------------"
   true
 end
