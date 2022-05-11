@@ -1,21 +1,34 @@
 class Bean
-  COLOR = { 0 => :black, 1 => :white }
+  COLOR = { 1 => :white, 0 => :black }
   def toss
-    COLOR[rand(0..1)]
+    @value = COLOR[rand(0..1)]
+    self
+  end
+
+  def to_s
+    @value == :black ? '▢' : '▣'
+  end
+
+  def value
+    @value
   end
 end
 
-class Player
+class Player < Struct.new(:name)
   def go
-    8.times.map { Bean.new.toss }
+    8.times.map do  
+        Bean.new.toss
+     end
   end
 end
 
 class Game
   def score(set)
-    x = set.group_by{|e| e}
-    c = x[:black].size if x[:black]
-    c = x[:white].size if x[:white] and c.to_i < 4
+    pp set.map(&:to_s)
+    set = set.map{|h| h.value } if set.first.is_a? Bean
+    x = set.tally
+    c = x[:black] if x[:black]
+    c = x[:white] if x[:white] and c.to_i < 4
     case c
     when 4
       1
@@ -28,8 +41,8 @@ class Game
 end
 
 def play
-  set = Player.new.go.tap{|x| puts x.inspect }
-  set_2 = Player.new.go.tap{|x| puts x.inspect }
+  set = Player.new('player 1').go
+  set_2 = Player.new('player 2').go
   puts a = Game.new.score(set)
   puts b = Game.new.score(set_2)
   puts "player 1 wins" if a > b
@@ -38,6 +51,7 @@ def play
 end
 
 def test_score_rules
+  puts "------------- test -------------"
   set = [:white,:white,:white,:white,:white,:white,:white,:white]
   raise unless Game.new.score(set) == 2
   set = [:black,:black,:black,:black,:white,:white,:white,:white]
@@ -47,7 +61,9 @@ def test_score_rules
   set = [:black,:white,:white,:white,:white,:white,:white,:white]
   raise unless Game.new.score(set) == 2
   set = [:black,:black,:black,:black,:black,:black,:black,:black]
-  Game.new.score(set) == 2
+  raise unless Game.new.score(set) == 2
+  puts "----------  tset --------------"
+  true
 end
 
 play if test_score_rules
