@@ -24,8 +24,10 @@ end
 
 class Game
   def score(set)
-    pp set.map(&:to_s)
-    set = set.map{|h| h.value } if set.first.is_a? Bean
+    if set.first.is_a? Bean 
+      pp set.map(&:to_s)
+      set = set.map{|h| h.value }
+    end
     x = set.tally
     c = x[:black] if x[:black]
     c = x[:white] if x[:white] and c.to_i < 4
@@ -51,7 +53,6 @@ def play
 end
 
 def test_score_rules
-  puts "------------- test -------------"
   set = [:white,:white,:white,:white,:white,:white,:white,:white]
   raise unless Game.new.score(set) == 2
   set = [:black,:black,:black,:black,:white,:white,:white,:white]
@@ -62,7 +63,7 @@ def test_score_rules
   raise unless Game.new.score(set) == 2
   set = [:black,:black,:black,:black,:black,:black,:black,:black]
   raise unless Game.new.score(set) == 2
-  puts "----------  tset --------------"
+  puts "----------  passed tests --------------"
   true
 end
 
